@@ -1,0 +1,265 @@
+\documentclass{beamer}
+%\documentclass[handout]{beamer}
+%\usepackage{pgfpages}
+%\pgfpagesuselayout{4 on 1}[a4paper,border shrink=5mm, landscape]
+
+\usepackage{graphicx}
+
+\usetheme{Warsaw}
+%\usepackage{fancybox}
+\usepackage{graphicx}
+
+%\usepackage{tcolorbox} % for nicely colored boxes
+
+\usepackage[tikz]{bclogo} %anothoer solution for fancy boxes, only french documentation!
+\presetkeys{bclogo}{
+ombre=true,
+epOmbre = 0.1,
+couleurOmbre = black!30,
+epBord=1,
+couleur = blue!15!white,
+couleurBord = blue,
+arrondi = 0.2,
+logo=\bcquestion
+}{}
+
+%customizing default blocks with nice config
+\newenvironment<>{niceblock}[1]{%
+  \setbeamercolor{block title}{fg=white,bg=blue!75!black}%
+  \begin{block}#2{#1}}{\end{block}}
+  
+%an environment to make the headline disappear
+\makeatletter
+    \newenvironment{withoutheadline}{
+        \setbeamertemplate{headline}[default]
+        \def\beamer@entrycode{\vspace*{-\headheight}}
+    }{}
+\makeatother
+
+\setbeamercolor{uppercolblue}{fg=white,bg=blue!35}
+\setbeamercolor{lowercolblue}{fg=black,bg=blue!10}
+
+%%%%%%%%%%%%%%For listing Codes
+\usepackage{listings}
+\usepackage{color}
+ 
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+ 
+\lstset{ %
+  language=R,                     % the language of the code
+  basicstyle=\footnotesize,       % the size of the fonts that are used for the code
+  numbers=right,                   % where to put the line-numbers
+  numberstyle=\tiny\color{gray},  % the style that is used for the line-numbers
+  stepnumber=1,                   % the step between two line-numbers. If it's 1, each line 
+                                  % will be numbered
+  numbersep=10pt,                  % how far the line-numbers are from the code
+  backgroundcolor=\color{white},  % choose the background color. You must add \usepackage{color}
+  showspaces=false,               % show spaces adding particular underscores
+  showstringspaces=false,         % underline spaces within strings
+  showtabs=false,                 % show tabs within strings adding particular underscores
+  frame=single,                   % adds a frame around the code
+  rulecolor=\color{blue},        % if not set, the frame-color may be changed on line-breaks within not-black text (e.g. commens (green here))
+  tabsize=2,                      % sets default tabsize to 2 spaces
+  captionpos=b,                   % sets the caption-position to bottom
+  breaklines=true,                % sets automatic line breaking
+  breakatwhitespace=false,        % sets if automatic breaks should only happen at whitespace
+  title=\lstname,                 % show the filename of files included with \lstinputlisting;
+                                  % also try caption instead of title
+  keywordstyle=\color{blue},          % keyword style
+  commentstyle=\color{dkgreen},       % comment style
+  stringstyle=\color{mauve},         % string literal style
+  escapeinside={\%*}{*)},            % if you want to add a comment within your code
+  morekeywords={*,...}               % if you want to add more keywords to the set
+}
+
+\title[Indian Men are not rapists! (Part 2)\hspace{5em}Slide \insertframenumber/\inserttotalframenumber]{Indian Men are not rapists!}
+\subtitle{Part 2}
+\author{@dataBiryani}
+\institute{Senior Data Scientist\\[0.2in]
+           \includegraphics[width=30pt]{./images/rbus.jpeg}.com\\
+           http://databiryani.com}
+\date{PyCon2015, $4^{th}$ October, 2015}
+\subject{PyCon2015}
+
+
+\begin{document}
+\SweaveOpts{concordance=TRUE}
+
+
+\begin{withoutheadline}
+  \frame{\titlepage}                             %create titlepage
+\end{withoutheadline}
+
+\begin{withoutheadline}
+  \frame{\tableofcontents}        %create table of contents page
+\end{withoutheadline}
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% What is virality
+
+\section{Where we stand...}
+
+
+\subsection{The Top 10}
+\begin{frame}%[containsverbatim]
+\frametitle{Top 10 Countries in 2010}
+
+ \includegraphics[width=350pt]{./images/top_10_rape_rates.png}
+
+\end{frame}
+
+
+
+\subsection{The Argument}
+
+\begin{frame}%[containsverbatim]
+\frametitle{The onus of proof...}
+
+\begin{itemize}
+  \item Most cases are not reported
+\end{itemize}
+
+\end{frame}
+
+
+
+\begin{frame}%[containsverbatim]
+\frametitle{But...}
+
+\begin{itemize}
+  \item Look at Botswana and Nicaragua and so on
+  \item Rape is probably better reported in First World
+\end{itemize}
+
+Also, there is the definition of rape.
+
+\end{frame}
+
+
+
+\begin{frame}%[containsverbatim]
+\frametitle{In any case...}
+
+Of the 62 nations for which statistics is available
+
+\begin{itemize}
+  \item only 5 have a smaller rate of rape
+  \item 14 have equal-or-smaller rate of rape
+  \item the mean is 14.29 (India is 1)
+  \item the median is 6.
+\end{itemize}
+
+\end{frame}
+
+
+\begin{frame}%[containsverbatim]
+\frametitle{The Bottom}
+
+For once, it is good to be at the bottom.
+
+\end{frame}
+
+
+\section{Our Media}
+
+\subsection{False Reporting: The Steep Rise}
+
+\begin{frame}%[containsverbatim]
+\frametitle{Example}
+
+\url{http://www.socialcops.org/data-wall/crime-india/}\\
+
+ \includegraphics[width=300pt]{./images/rising_stat.png}
+
+\end{frame}
+
+\begin{frame}%[containsverbatim]
+\frametitle{Key Stats}
+
+\begin{itemize}
+  \item for every 21 minutes, one rape occurs somewhere in India
+  \item 69.9\% increase in CAW from 2001 to 2012
+\end{itemize}
+
+\end{frame}
+
+
+\begin{frame}%[containsverbatim]
+\frametitle{The Reality - 21 minutes}
+
+What happened to population growth?
+
+\end{frame}
+
+
+\begin{frame}%[containsverbatim]
+\frametitle{The Reality - Rise in CAW I}
+
+ \includegraphics[width=320pt]{./images/rise_in_caw.png}
+
+\end{frame}
+
+
+\begin{frame}%[containsverbatim]
+\frametitle{The Reality - Rise in CAW II}
+
+\begin{itemize}
+  \item Linear Growth vs Exponential Growth
+  \item Where should we focus?
+  \item 69\%
+        \begin{itemize}
+          \item 55\% in Rape
+          \item 161\% in Kidnapping and Abduction of Women \& Girls
+          \item The Big Contributor: Cruelty by Husband or his relatives (117\%, 49,170 to 106,527)
+        \end{itemize}
+\end{itemize}
+
+
+\end{frame}
+
+
+
+\subsection{False Reporting: The Steep Fall}
+
+\begin{frame}%[containsverbatim]
+\frametitle{Example}
+
+\url{http://blog.socialcops.com/open-data/is-it-ubers-fault-or-is-the-indian-system-to-share-blame}\\
+
+\includegraphics[width=300pt]{./images/rape_conviction_rate1.png}
+
+
+\end{frame}
+
+
+
+
+\begin{frame}%[containsverbatim]
+\frametitle{The Reality}
+
+\includegraphics[width=320pt]{./images/rape_conviction_rate2.png}
+
+\end{frame}
+
+
+
+
+\begin{frame}%[containsverbatim]
+\frametitle{Conclusion}
+
+\begin{itemize}
+  \item Let's not exaggerate issues with irresponsible charts and figures.
+  \item Let's not drown out pressing issues by focussing too much on a single issue.
+\end{itemize}
+
+
+\end{frame}
+
+
+
+\end{document}

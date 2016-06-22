@@ -30,7 +30,7 @@ rapeplot <- ggplot(data=rapes2010.top10.ind, aes(y=rate2010, x=Countries, fill=C
   xlab("Top 10 Countries + India") +
   geom_text(aes(label=rate2010), vjust=-0.2)
 
-png(filename="Std_PNG_cairo.png", type="cairo", units="in", 
+png(filename="rape_statistics_across_world.png", type="cairo", units="in", 
     width=10, height=6, pointsize=12, res=300)
 print(rapeplot)
 dev.off()
