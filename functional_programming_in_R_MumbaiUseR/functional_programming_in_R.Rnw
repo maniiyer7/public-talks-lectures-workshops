@@ -1,0 +1,942 @@
+\documentclass{beamer}
+%\documentclass[handout]{beamer}
+%\usepackage{pgfpages}
+%\pgfpagesuselayout{4 on 1}[a4paper,border shrink=5mm, landscape]
+
+\usepackage{graphicx}
+
+\usetheme{Warsaw}
+%\usepackage{fancybox}
+\usepackage{graphicx}
+
+%\usepackage{tcolorbox} % for nicely colored boxes
+
+\usepackage[tikz]{bclogo} %anothoer solution for fancy boxes, only french documentation!
+\presetkeys{bclogo}{
+ombre=true,
+epOmbre = 0.1,
+couleurOmbre = black!30,
+epBord=1,
+couleur = blue!15!white,
+couleurBord = blue,
+arrondi = 0.2,
+logo=\bcquestion
+}{}
+
+%customizing default blocks with nice config
+\newenvironment<>{niceblock}[1]{%
+  \setbeamercolor{block title}{fg=white,bg=blue!75!black}%
+  \begin{block}#2{#1}}{\end{block}}
+  
+%an environment to make the headline disappear
+\makeatletter
+    \newenvironment{withoutheadline}{
+        \setbeamertemplate{headline}[default]
+        \def\beamer@entrycode{\vspace*{-\headheight}}
+    }{}
+\makeatother
+
+\setbeamercolor{uppercolblue}{fg=white,bg=blue!35}
+\setbeamercolor{lowercolblue}{fg=black,bg=blue!10}
+
+%%%%%%%%%%%%%%For listing Codes
+\usepackage{listings}
+\usepackage{color}
+ 
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+ 
+\lstset{ %
+  language=R,                     % the language of the code
+  basicstyle=\footnotesize,       % the size of the fonts that are used for the code
+  numbers=right,                   % where to put the line-numbers
+  numberstyle=\tiny\color{gray},  % the style that is used for the line-numbers
+  stepnumber=1,                   % the step between two line-numbers. If it's 1, each line 
+                                  % will be numbered
+  numbersep=10pt,                  % how far the line-numbers are from the code
+  backgroundcolor=\color{white},  % choose the background color. You must add \usepackage{color}
+  showspaces=false,               % show spaces adding particular underscores
+  showstringspaces=false,         % underline spaces within strings
+  showtabs=false,                 % show tabs within strings adding particular underscores
+  frame=single,                   % adds a frame around the code
+  rulecolor=\color{blue},        % if not set, the frame-color may be changed on line-breaks within not-black text (e.g. commens (green here))
+  tabsize=2,                      % sets default tabsize to 2 spaces
+  captionpos=b,                   % sets the caption-position to bottom
+  breaklines=true,                % sets automatic line breaking
+  breakatwhitespace=false,        % sets if automatic breaks should only happen at whitespace
+  title=\lstname,                 % show the filename of files included with \lstinputlisting;
+                                  % also try caption instead of title
+  keywordstyle=\color{blue},          % keyword style
+  commentstyle=\color{dkgreen},       % comment style
+  stringstyle=\color{mauve},         % string literal style
+  escapeinside={\%*}{*)},            % if you want to add a comment within your code
+  morekeywords={*,...}               % if you want to add more keywords to the set
+}
+
+\title[Functional Programming in R\hspace{5em}Slide \insertframenumber/\inserttotalframenumber]{Functional Programming in R}
+\subtitle{A Pragmatic Introduction}
+\author{Soumendra Prasad Dhanee}
+\institute{Data Scientist\\
+           \includegraphics[scale=0.15]{./images/embibe_logo.pdf}.com}
+\date{$18^{th}$ October, 2014\\
+       $8^{th}$ November, 2014\\
+      (delivered at R Meetup, Mumbai)}
+\subject{R}
+
+
+\begin{document}
+
+
+\begin{withoutheadline}
+  \frame{\titlepage}                             %create titlepage
+\end{withoutheadline}
+
+\begin{withoutheadline}
+  \frame{\tableofcontents}        %create table of contents page
+\end{withoutheadline}
+
+
+
+
+\begin{frame}%[containsverbatim]
+\frametitle{Overview}
+
+\begin{itemize}
+  \item We'll start by reviewing basics
+  \item We'll see the ideas at action first (by solving problems) and abstractions later
+  \item We'll digress a lot
+\end{itemize}
+
+\end{frame}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%% Introduction with Problem 1
+
+\section{Introduction}
+
+\begin{withoutheadline}
+\begin{frame}
+\frametitle{Next ...}
+\tableofcontents[currentsection]
+\end{frame}
+\end{withoutheadline}
+
+
+\subsection{Getting Started}
+
+\begin{frame}[containsverbatim]
+\frametitle{Writing a function in R}
+
+\begin{lstlisting}
+functionname <- function(arg1, arg2, ...) {
+  <<expressions>>
+  [return(<<expression>>)]
+}
+\end{lstlisting}
+
+\begin{itemize}
+  \item return() is optional
+  \item last statement of the function body is returned by default
+
+\end{itemize}
+
+\end{frame}
+
+
+
+\begin{frame}[containsverbatim]
+\frametitle{Example of a Function}
+
+\begin{lstlisting}
+square.of <- function(x) {
+  x*x
+}
+\end{lstlisting}
+
+Call the function
+
+\begin{lstlisting}
+square.of(4)
+y <- square.of(x=4)
+square.of(z=4)
+\end{lstlisting}
+
+\end{frame}
+
+
+
+\begin{frame}[containsverbatim]
+\frametitle{More on Functions}
+
+\begin{itemize}
+  \item Arguments of R functions can be either required or optional, indicated by syntax
+  \item Required arguments have no default value
+  \item Optional arguments are defined to have a default value
+\end{itemize}
+
+\end{frame}
+
+
+\begin{frame}[containsverbatim]
+\frametitle{More on Functions - Example}
+
+\begin{lstlisting}
+add <- function(x, y = 2) {
+  x+y
+}
+\end{lstlisting}
+
+\begin{lstlisting}
+add(3)
+add(3,2)
+add(x=3)
+add(x=3, y=2)
+add(y=2)
+add( , 3)
+\end{lstlisting}
+
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Example - Computing Power I}
+
+Write a function that computes the kth power of an argument x, using one default argument, and one optional argument, i.e. an argument that has a default value.\\[1in]
+%
+We'll be coming back to this function later on.
+
+\end{frame}
+
+
+\begin{frame}[containsverbatim]
+\frametitle{Example - Computing Power II}
+
+\begin{lstlisting}
+power <- function(x, k=2) x^k
+\end{lstlisting}
+
+\end{frame}
+
+
+
+\begin{frame}
+\frametitle{The apply family of functions}
+
+\begin{itemize}
+  \item lapply(X, FUN, ...)\\
+        returns a list of the same length as X, each element of which is the result of applying FUN to the corresponding element of X\\[0.5in]
+
+  \item sapply(X, FUN, ...)\\
+        a user-friendly version of lapply by default returning a vector or matrix if appropriate
+\end{itemize}
+
+Read the Documentation
+
+\end{frame}
+
+
+\subsection{Vectorization}
+
+\begin{frame}
+\frametitle{Vectorized Functions}
+... functions that operate on vectors or matrices or dataframes.
+
+\begin{itemize}
+  \item Often much faster than looping over a vector, often use \texttt{.Internal} or \texttt{.Primitive}
+  \item Higher abstraction - less code to write, less to debug
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}[containsverbatim]
+\frametitle{\texttt{.Internal} and \texttt{.Primitive} - I}
+
+<<>>=
+log
+@
+
+<<>>=
+paste
+@
+
+\end{frame}
+
+
+\begin{frame}[containsverbatim]
+\frametitle{\texttt{.Internal} and \texttt{.Primitive} - II}
+
+<<>>=
+colMeans
+@
+
+\end{frame}
+
+
+\begin{frame}[containsverbatim]
+\frametitle{Examples of Vectorized Functions}
+
+\begin{itemize}
+  \item ifelse()
+  \item is.na()
+\end{itemize}
+
+\begin{itemize}
+  \item log()
+  \item sqrt()
+  \item rnorm()
+\end{itemize}
+
+\begin{itemize}
+  \item colMeans()
+  \item rowSums()
+\end{itemize}
+
+\begin{itemize}
+  \item $x > y$
+  \item x == y
+  \item !x
+\end{itemize}
+
+\end{frame}
+
+
+\subsection{Vectorization in Practice}
+\begin{frame}[containsverbatim]
+\frametitle{Primality Testing I}
+
+Given a number, decide if it is a prime or not.\\[0.3in]
+
+Hint 1 : min(x) gives the lowest element of vector x
+
+<<echo=TRUE>>=
+min(c(2, 1, 3))
+@
+
+\end{frame}
+
+
+
+\begin{frame}[containsverbatim]
+\frametitle{Primality Testing II}
+
+\begin{lstlisting}
+min( x%%( 2:(x-1) ) )>0
+\end{lstlisting}
+
+The Deconstruction
+
+\begin{lstlisting}
+2:(x-1)
+x%%( 2:(x-1) )
+min( x%%( 2:(x-1) ) )>0
+\end{lstlisting}
+
+\end{frame}
+
+
+
+\begin{frame}[containsverbatim]
+\frametitle{Lists of functions}
+
+<<>>=
+x <- 1:10
+funs <- list(
+  sum = sum,
+  mean = mean,
+  median = median
+)
+sapply(funs, function(f) f(x))
+@
+
+\end{frame}
+
+
+
+\subsection{Problem 1}
+\begin{frame}%[containsverbatim]
+\frametitle{Let's get started}
+
+\begin{bclogo}{Problem 1}
+\begin{itemize}
+  \item Input\\
+        A numeric vector (\texttt{1:200000})
+  \item Output\\
+        A vector containing the even numbers in the input vector, listed in the order they appeared in the input vector
+\end{itemize}
+\end{bclogo}
+
+\end{frame}
+
+
+\begin{frame}[containsverbatim]
+\frametitle{Solution - for loop I}
+
+\begin{bclogo}[logo=\bclampe]{Solution using for loop}
+\begin{lstlisting}
+x <- 1:200000
+ans <- logical(200000)
+for(i in x)
+{
+  if(i%%2==0) { ans[i] = TRUE } else {
+    ans[i] = FALSE }
+}
+x[ans]
+\end{lstlisting}
+
+<<echo=F>>=
+x <- 1:200000
+for1 <- function(x) {
+  ans <- logical(length(x))
+  #ans <- c()
+  for(i in x)
+  {
+    if(i%%2==0) { ans[i] = TRUE } else {
+      ans[i] = FALSE }
+  }
+  return(x[ans])
+}
+system.time(z <- for1(x))
+@
+\end{bclogo}
+
+\end{frame}
+
+\begin{frame}[containsverbatim]
+\frametitle{Solution - for loop II}
+
+\begin{bclogo}[logo=\bclampe]{Solution using for loop}
+\begin{lstlisting}
+x <- 1:200000
+ans <- c()
+for(i in x)
+{
+  if(i%%2==0) { ans[i] = TRUE } else {
+    ans[i] = FALSE }
+}
+x[ans]
+\end{lstlisting}
+
+<<echo=F, cache=TRUE>>=
+x <- 1:200000
+for2 <- function(x) {
+  #ans <- logical(length(x))
+  ans <- c()
+  for(i in x)
+  {
+    if(i%%2==0) { ans[i] = TRUE } else {
+      ans[i] = FALSE }
+  }
+  return(x[ans])
+}
+system.time(z <- for2(x))
+@
+\end{bclogo}
+
+\end{frame}
+
+
+\begin{frame}[containsverbatim]
+\frametitle{Solution - vectorized functions}
+
+\begin{bclogo}[logo=\bclampe]{Solution using vectorized functions}
+\begin{lstlisting}
+x <- 1:200000
+ans <- x%%2==0
+x[ans]
+\end{lstlisting}
+
+<<echo=FALSE>>=
+x <- 1:200000
+nofor <- function(x) {
+  ans <- x%%2==0
+  return(x[ans])
+}
+system.time(z <- nofor(x))
+@
+\end{bclogo}
+
+\end{frame}
+
+
+
+
+\begin{frame}[containsverbatim]
+\frametitle{Solution - higher-order functions}
+
+\begin{bclogo}[logo=\bclampe]{Solution using higher-order functions}
+\begin{lstlisting}
+x <- 1:200000
+ans <- sapply(x, function(i) i%%2==0)
+x[ans]
+\end{lstlisting}
+
+<<echo=FALSE>>=
+x <- 1:200000
+nofor <- function(x) {
+  ans <- sapply(x, function(i) i%%2==0)
+  return(x[ans])
+}
+system.time(z <- nofor(x))
+@
+\end{bclogo}
+
+\end{frame}
+
+
+
+\subsection{Higher-order Functions}
+\begin{frame}%[containsverbatim]
+\frametitle{What are higher-order functions?}
+
+\begin{bclogo}[logo=\bcinfo]{Higher-order Functions}
+A higher-order function (also functional form, functional or functor) is a function that does at least one of the following:
+
+\begin{itemize}
+  \item takes one or more functions as an input
+  \item outputs a function
+\end{itemize}
+
+    -source - Wikipedia
+\end{bclogo}
+
+\end{frame}
+
+\begin{frame}%[containsverbatim]
+\frametitle{An example}
+
+\begin{bclogo}[logo=\bcinfo]{sapply}
+  sapply(X, FUN, ...)
+\end{bclogo}
+
+\end{frame}
+
+
+\subsection{First-class Functions}
+\begin{frame}%[containsverbatim]
+\frametitle{What are first-class functions?}
+
+\begin{bclogo}[logo=\bcinfo]{First-class Functions}
+First-class functions are functions that can be treated like any other piece of data ...
+
+\begin{itemize}
+  \item can be stored in a variable
+  \item can be stored in a list
+  \item can be stored in an object
+  \item can be passed to other functions
+  \item can be returned from other functions
+\end{itemize}
+
+ ... just like any other piece of data.
+ 
+\end{bclogo}
+
+\end{frame}
+
+
+
+
+\section{More about functions}
+
+\begin{withoutheadline}
+\begin{frame}
+\frametitle{Next ...}
+\tableofcontents[currentsection]
+\end{frame}
+\end{withoutheadline}
+
+
+\subsection{Problem 2}
+\begin{frame}%[containsverbatim]
+\frametitle{Rounding off}
+
+\begin{bclogo}{Problem 2a}
+\begin{itemize}
+  \item Input\\
+        A numeric vector (\texttt{rnorm(100, 0, 1)})
+  \item Output\\
+        A vector containing all the numbers in the input vector rounded to the nearest integer
+\end{itemize}
+\end{bclogo}
+
+\end{frame}
+
+
+\begin{frame}[containsverbatim]
+\frametitle{Solution 2a - Rounding off}
+
+\begin{bclogo}[logo=\bclampe]{Solution using sapply}
+\begin{lstlisting}
+sapply(rnorm(100, 0, 1), round)
+\end{lstlisting}
+
+\end{bclogo}
+
+\end{frame}
+
+
+\begin{frame}%[containsverbatim]
+\frametitle{Rounding off}
+
+\begin{bclogo}{Problem 2b}
+\begin{itemize}
+  \item Input\\
+        A numeric vector (\texttt{rnorm(100, 0, 1)})
+  \item Output\\
+        A vector containing all the numbers in the input vector rounded to two decimal places
+\end{itemize}
+\end{bclogo}
+
+\end{frame}
+
+
+\begin{frame}[containsverbatim]
+\frametitle{Solution 2b - Rounding off}
+
+\begin{bclogo}[logo=\bclampe]{Solution using sapply}
+\begin{lstlisting}
+sapply(rnorm(100, 0, 1), function(x) round(x, 2))
+\end{lstlisting}
+
+\end{bclogo}
+
+\end{frame}
+
+
+
+\subsection{Anonymous Functions}
+\begin{frame}%[containsverbatim]
+\frametitle{Anonymous Functions}
+
+\begin{bclogo}[logo=\bcinfo]{Anonymous Functions}
+Anonymous function is a function that is not bound to an identifier.
+
+   source - Wikipedia
+\end{bclogo}
+
+\end{frame}
+
+
+\subsection{Problem 3}
+\begin{frame}%[containsverbatim]
+\frametitle{Acting on Matrices}
+
+\begin{bclogo}{Problem 3}
+\begin{itemize}
+  \item Input\\
+        A 3-by-3 matrix (matrix(1:9, ncol=3))
+  \item Output\\
+        Add 1 to row 1, 4 to row 2, 7 to row 3
+\end{itemize}
+\end{bclogo}
+
+\end{frame}
+
+
+\begin{frame}[containsverbatim]
+\frametitle{Solution 3 - Matrix Addition}
+
+\begin{bclogo}[logo=\bclampe]{Solution using sweep}
+\begin{lstlisting}
+m <- matrix(1:9, ncol=3)
+sweep(m, 1, c(1, 4, 7), "+")
+\end{lstlisting}
+
+<<echo=FALSE>>=
+m <- matrix(1:9, ncol=3)
+sweep(m, 1, c(1, 4, 7), "+")
+@
+\end{bclogo}
+
+\end{frame}
+
+
+
+\section{Applicative Programming}
+
+\begin{withoutheadline}
+\begin{frame}
+\frametitle{Next ...}
+\tableofcontents[currentsection]
+\end{frame}
+\end{withoutheadline}
+
+\begin{frame}%[containsverbatim]
+\frametitle{Applicative Programming}
+
+Calling by function B of function A, where function A was originally supplied to function B as an argument.
+
+\begin{bclogo}[logo=\bclampe]{Examples}
+
+\begin{itemize}
+  \item map
+  \item reduce (fold)
+  \item filter
+\end{itemize}
+
+\end{bclogo}
+
+\end{frame}
+
+
+\subsection{Map}
+
+\begin{frame}[containsverbatim]
+\frametitle{Map}
+
+Map(f, x, ...)
+
+\begin{lstlisting}
+
+function (f, ...) 
+{
+    f <- match.fun(f)
+    mapply(FUN = f, ..., SIMPLIFY = FALSE)
+}
+<bytecode: 0x402ad90>
+<environment: namespace:base>
+
+\end{lstlisting}
+
+\end{frame}
+
+
+
+\subsection{mapply}
+
+\begin{frame}[containsverbatim]
+\frametitle{mapply}
+
+mapply is a multivariate version of sapply.
+
+\begin{lstlisting}
+mapply(rep, 1:4, 4:1)
+
+mapply(rep, times = 1:4, x = 4:1)
+
+mapply(rep, x = 1:4, times = 4:1)
+\end{lstlisting}
+
+\end{frame}
+
+
+\subsection{Filter}
+
+\begin{frame}[containsverbatim]
+\frametitle{Filter I}
+
+Choose all the even numbers. 
+\begin{lstlisting}
+Filter(function(x) x%%2, 1:200000)
+\end{lstlisting}
+
+<<echo=FALSE>>=
+system.time(z <- Filter(function(x) x%%2, 1:200000))
+@
+
+\end{frame}
+
+\begin{frame}[containsverbatim]
+\frametitle{Filter II}
+
+The previous solution was wrong.\\[0.2in]
+
+Now what is the output of the following - \\[0.2in]
+
+\begin{lstlisting}
+Filter(c(T, F), 1:200000)
+\end{lstlisting}
+
+\end{frame}
+
+
+\begin{frame}[containsverbatim]
+\frametitle{Filter III}
+
+\begin{lstlisting}
+function (f, x) 
+{
+    ind <- as.logical(unlist(lapply(x, f)))
+    x[!is.na(ind) & ind]
+}
+<bytecode: 0x4f87f00>
+<environment: namespace:base>
+\end{lstlisting}
+
+\end{frame}
+
+
+\subsection{Negate}
+\begin{frame}[containsverbatim]
+\frametitle{Negate I}
+
+What is the outcome?
+
+\begin{lstlisting}
+Negate(c(T, F), 1:10)
+\end{lstlisting}
+
+\end{frame}
+
+\begin{frame}[containsverbatim]
+\frametitle{Negate II}
+
+What is the outcome?
+
+\begin{lstlisting}
+Filter(Negate(function(x) x%%2), 1:10)
+\end{lstlisting}
+
+\end{frame}
+
+
+
+\begin{frame}[containsverbatim]
+\frametitle{Negate III}
+
+\begin{lstlisting}
+function (f) 
+{
+    f <- match.fun(f)
+    function(...) !f(...)
+}
+<bytecode: 0x4e9c250>
+<environment: namespace:base>
+\end{lstlisting}
+
+\end{frame}
+
+
+
+
+\section{Closure}
+
+\begin{withoutheadline}
+\begin{frame}
+\frametitle{Next ...}
+\tableofcontents[currentsection]
+\end{frame}
+\end{withoutheadline}
+
+
+\begin{frame}[containsverbatim]
+\frametitle{Computing Power Revisited}
+
+Write a function that computes the kth power of an argument x, using one default argument, and one optional argument, i.e. an argument that has a default value.\\
+
+\begin{lstlisting}
+power <- function(x, k=2) {
+  x^k
+}
+\end{lstlisting}
+
+\end{frame}
+
+
+\begin{frame}[containsverbatim]
+\frametitle{Function Factory with Closures}
+
+A function returning a function:
+
+\begin{lstlisting}
+power <- function(exponent) {
+  function(x) {
+    x ^ exponent
+  }
+}
+
+square <- power(2)
+square(2)
+square(4)
+
+cube <- power(3)
+cube(2)
+cube(4)
+\end{lstlisting}
+
+\end{frame}
+
+
+\begin{frame}%[containsverbatim]
+\frametitle{What are Closures?}
+
+\begin{quote}
+\texttt{An object is data with functions. A closure is a function with data.}\\
+
+                                         - John D. Cook\\
+\end{quote}
+
+\begin{quote}
+... an abstraction binding a function to its scope.\\
+
+ - Wikipedia\\
+\end{quote}
+
+\begin{quote}
+Closures get their name because they enclose the environment of the parent function and can access all its variables.\\
+
+  - Hadley Wickham
+\end{quote}
+
+\end{frame}
+
+
+\begin{frame}[containsverbatim]
+\frametitle{Closer look at closures I}
+
+<<echo=FALSE>>=
+power <- function(exponent) {
+  function(x) {
+    x ^ exponent
+  }
+}
+
+square <- power(2)
+cube <- power(3)
+@
+
+<<>>=
+square
+cube
+@
+
+\end{frame}
+
+
+
+\begin{frame}[containsverbatim]
+\frametitle{Closer look at closures II}
+
+<<>>=
+as.list(environment(square))
+
+
+as.list(environment(cube))
+@
+
+\end{frame}
+
+
+
+\begin{frame}[containsverbatim]
+\frametitle{Closer look at closures III}
+
+\begin{lstlisting}
+library(pryr)
+unenclose(square)
+#> function (x) 
+#> {
+#>     x^2
+#> }
+unenclose(cube)
+#> function (x) 
+#> {
+#>     x^3
+#> }
+\end{lstlisting}
+
+\end{frame}
+
+
+\end{document}
